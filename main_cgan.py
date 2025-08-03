@@ -8,7 +8,7 @@ import torch.optim as optim
 import torch.utils.data
 import torchvision
 import datetime
-from btp_dataset import BtpDataset
+from dataset import StockDataset
 from utils import time_series_to_plot
 from tensorboardX import SummaryWriter
 from models.recurrent_models import LSTMGenerator, LSTMDiscriminator
@@ -27,7 +27,7 @@ parser.add_argument('--netG', default='', help="path to netG (to continue traini
 parser.add_argument('--netD', default='', help="path to netD (to continue training)")
 parser.add_argument('--outf', default='checkpoints', help='folder to save checkpoints')
 parser.add_argument('--imf', default='images', help='folder to save images')
-parser.add_argument('--manualSeed', type=int, help='manual seed')
+parser.add_argument('--maunal_seed', type=int, help='manual seed')
 parser.add_argument('--logdir', default='log', help='logdir for tensorboard')
 parser.add_argument('--run_tag', default='', help='tags for the current run')
 parser.add_argument('--checkpoint_every', default=5, help='number of epochs after which saving checkpoints') 
@@ -53,11 +53,11 @@ try:
 except OSError:
     pass
 
-if opt.manualSeed is None:
-    opt.manualSeed = random.randint(1, 10000)
-print("Random Seed: ", opt.manualSeed)
-random.seed(opt.manualSeed)
-torch.manual_seed(opt.manualSeed)
+if opt.maunal_seed is None:
+    opt.maunal_seed = random.randint(1, 10000)
+print("Random Seed: ", opt.maunal_seed)
+random.seed(opt.maunal_seed)
+torch.manual_seed(opt.maunal_seed)
 
 cudnn.benchmark = True
 
@@ -65,7 +65,7 @@ if torch.cuda.is_available() and not opt.cuda:
     print("You have a cuda device, so you might want to run with --cuda as option")
 
 if opt.dataset == "btp":
-    dataset = BtpDataset(opt.dataset_path)
+    dataset = StockDataset(opt.dataset_path)
 assert dataset
 dataloader = torch.utils.data.DataLoader(dataset, batch_size=opt.batchSize,
                                          shuffle=True, num_workers=int(opt.workers))
